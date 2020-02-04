@@ -33,7 +33,7 @@
 </body>
 <script src="./js/jquery-1.12.4.min.js"></script>
 <script>
-    // 功能语义化
+    // 语义化 登录
     // 请求成功状态码 200   失败400
     var user = {
         login: function (name, password) {
@@ -43,7 +43,7 @@
             }).then(function (res) {
                 console.log(res)
                 if (res.code === 200) {
-                    alert('登陆成功')
+                    // alert('登陆成功')
                     window.location.href = './index.html'
                 } else {
                     alert(res.msg)
