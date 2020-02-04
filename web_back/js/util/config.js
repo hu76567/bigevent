@@ -9,5 +9,6 @@ var BASEURL = 'http://192.168.1.111:8000'
 var APILIST = {
     user_login: BASEURL + '/admin/login',
     user_logout: BASEURL + '/admin/logout',
-    user_loginfo: BASEURL + '/admin/getuser'
+    user_loginfo: BASEURL + '/admin/getuser',
+    category_get: BASEURL + '/admin/category_search'
 }
