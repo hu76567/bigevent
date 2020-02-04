@@ -32,32 +32,10 @@
     </div>
 </body>
 <script src="./js/jquery-1.12.4.min.js"></script>
-<script>
-    // 语义化 登录
-    // 请求成功状态码 200   失败400
-    var user = {
-        login: function (name, password) {
-            $.post('http://192.168.1.111:8000/admin/login', {
-                'user_name': name,
-                'password': password
-            }).then(function (res) {
-                console.log(res)
-                if (res.code === 200) {
-                    // alert('登陆成功')
-                    window.location.href = './index.html'
-                } else {
-                    alert(res.msg)
-                }
-            })
-        }
-    }
-</script>
+<script src="./js/util/config.js"></script>
+<script src="./js/util/user.js"></script>
 
 <script>
-    // 用户登录
-    // 给按钮添加点击事件，收集用户信息，简单判断，请求接口，根据接口反馈，做后续的动作
-
-
     // 1) 收集信息
     $('#btnLogin').click(function () {
         var name = $('#username').val().trim();
@@ -68,8 +46,15 @@
         }
         // 发送请求  快捷方法
         // $.post(url,数据).then(回调)
-        // 调用之前语义化
-        user.login(name, password)
+        user.login(name, password).then(function (res) {
+            console.log(res)
+            if (res.code === 200) {
+                // alert('登陆成功')
+                window.location.href = './index.html'
+            } else {
+                alert(res.msg)
+            }
+        })
 
         // 请求成功状态码 200   失败400
         // 发送请求   笨方法
