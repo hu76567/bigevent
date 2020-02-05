@@ -10,5 +10,6 @@ var APILIST = {
     user_login: BASEURL + '/admin/login',
     user_logout: BASEURL + '/admin/logout',
     user_loginfo: BASEURL + '/admin/getuser',
-    category_get: BASEURL + '/admin/category_search'
+    category_get: BASEURL + '/admin/category_search',
+    category_add: BASEURL + '/admin/category_add'
 }
