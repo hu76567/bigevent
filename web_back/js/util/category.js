@@ -7,5 +7,8 @@ var category = {
     // 添加文章类别
     add: function (name, slug) {
         return $.post(APILIST.category_add, { 'name': name, 'slug': slug })
-    }
+    },
+    del: function (id) {
+        return $.post(APILIST.category_del, { 'id': id })
+    },
 }
