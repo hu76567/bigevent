@@ -21,6 +21,10 @@ var APILIST = {
     category_del: BASEURL + '/admin/category_delete',
     // 编辑
     category_edit: BASEURL + '/admin/category_edit',
+
+
     // 获取文章
-    article_get: BASEURL + '/admin/search'
+    article_get: BASEURL + '/admin/search',
+    // 删除文章
+    article_del: BASEURL + '/admin/article_delete'
 }

@@ -111,7 +111,7 @@
                 <td class="text-center">{{item.state}}</td>
                 <td class="text-center">
                 <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:;" data-id='{{item.id}}' class="btn btn-danger btn-xs del">删除</a>
                 </td>
             </tr> 
         {{/each}}
@@ -188,6 +188,29 @@
 
             // 在做查询并显示
             getAndShow();
+        })
+
+
+
+        // 删除功能 tbody加事件委托
+        $('#tbody').on('click', '.del', function () {
+            // alert(1)
+
+            // 原则 让代码尽早结束
+            if (!confirm('你确定要删除么')) {
+                return
+            }
+            var id = $(this).attr('data-id')
+            // alert(id)
+            article.del(id).then(function (res) {
+                if (res.code === 200) {
+                    // 删除成功
+                    // 重新获取
+                    getAndShow();
+                } else {
+                    alert(res.msg)
+                }
+            })
         })
     </script>
 </body>
