@@ -1,8 +1,8 @@
 // 把与文章分类相关的操作写在这里
 var article = {
-    // 获取文章类别
-    get: function () {
-        return $.get(APILIST.article_get)
+    // 获取文章列表
+    get: function (page) {
+        return $.get(APILIST.article_get, { 'page': page })
     },
     // // 添加文章类别
     // add: function (name, slug) {
