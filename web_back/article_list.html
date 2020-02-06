@@ -30,11 +30,11 @@
                             <option>爱旅行</option> -->
                         </select>
                         <select id="selStatus" name="" class="form-control input-sm">
-                            <option>所有状态</option>
-                            <option value="drafted">草稿</option>
-                            <option value="published">已发布</option>
+                            <option value="">所有状态</option>
+                            <option value="草稿">草稿</option>
+                            <option value="已发布">已发布</option>
                         </select>
-                        <button id="btnSearch" class="btn btn-default btn-sm">筛选</button>
+                        <button type="button" id="btnSearch" class="btn btn-default btn-sm">筛选</button>
                     </form>
                 </div>
                 <div class="col-xs-6">
@@ -93,9 +93,9 @@
 
     <!-- 模板结构1 -->
     <script id="tmp_category" type="text/html">
-        <option>所有分类</option>
+        <option value="">所有分类</option>
         {{each data item}}
-        <option>{{item.name}}</option>
+        <option value="{{item.id}}">{{item.name}}</option>
         {{/each}}
     </script>
 
@@ -108,7 +108,7 @@
                 <td>{{item.auther}}</td>
                 <td>{{item.type}}</td>
                 <td class="text-center">{{item.date}}</td>
-                <td class="text-center">state</td>
+                <td class="text-center">{{item.state}}</td>
                 <td class="text-center">
                 <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
                 <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
@@ -120,7 +120,11 @@
 
 
     <script>
-        var curPage = 1;
+
+        var curPage = 1;    //全局变量，表示当前要查询第几页的数据
+        var curType = '';   //全局变量，表示当前要查询文章的类型编号
+        var curStatus = '';   //全局变量，表示当前要查询文章的状态
+        var curTotalPage;
 
         //  1 获取文章类别信息显示在下拉列表中
         //   调用接口获取数据
@@ -134,15 +138,20 @@
 
         //  2获取文章列表，并显示在表格
         function getAndShow() {
-            article.get(curPage).then(function (res) {
+            article.get(curPage, curType, curStatus).then(function (res) {
                 // console.log(res)
                 if (res.code === 200) {
                     // 渲染表格
                     var htmlStr = template('tmp_table', res)
                     $('#tbody').html(htmlStr)
 
-
+                    if (curTotalPage !== res.totalPage) {
+                        $('#pagination').twbsPagination('destroy')
+                        console.log(curTotalPage, res.totalPage)
+                        curTotalPage = res.totalPage
+                    }
                     // 分页功能
+                    // 两次获取到的总页码不一样，总页数需要摧毁再重建
                     $('#pagination').twbsPagination({
                         totalPages: res.totalPage,
                         visiblePages: 5,
@@ -165,6 +174,21 @@
             })
         }
         getAndShow();
+
+
+
+
+        // 3.筛选  获取选择，带参数调用接口，获取数据
+        $('#btnSearch').click(function () {
+            //    把页码重置为第一页
+            curPage = 1
+            curType = $('#selCategory').val()
+            curStatus = $('#selStatus').val()
+            console.log($('#selCategory').val(), $('#selStatus').val())
+
+            // 在做查询并显示
+            getAndShow();
+        })
     </script>
 </body>
 
