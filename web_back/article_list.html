@@ -110,7 +110,7 @@
                 <td class="text-center">{{item.date}}</td>
                 <td class="text-center">{{item.state}}</td>
                 <td class="text-center">
-                <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+                <a href="article_edit.html?={{item.id}}" class="btn btn-default btn-xs">编辑</a>
                 <a href="javascript:;" data-id='{{item.id}}' class="btn btn-danger btn-xs del">删除</a>
                 </td>
             </tr> 
@@ -139,7 +139,7 @@
         //  2获取文章列表，并显示在表格
         function getAndShow() {
             article.get(curPage, curType, curStatus).then(function (res) {
-                console.log(res)
+                // console.log(res)
                 if (res.code === 200) {
                     // 渲染表格
                     var htmlStr = template('tmp_table', res)
@@ -147,7 +147,7 @@
 
                     if (curTotalPage !== res.totalPage) {
                         $('#pagination').twbsPagination('destroy')
-                        console.log(curTotalPage, res.totalPage)
+                        // console.log(curTotalPage, res.totalPage)
                         curTotalPage = res.totalPage
                     }
                     // 分页功能
