@@ -83,8 +83,13 @@
 
 
     <script>
-        //获取从列表页传过来的参数
-        var id = window.location.search
+        // 编辑文章
+        //获取从列表页传过来的id
+        // 根据id 去取数据并显示在页面上
+        // 保存编辑的内容
+        var str = window.location.search  //用来获取url中查询字符串的值
+        // console.log(id)
+        var id = str.substr(4)   //截取字符串
         console.log(id)
     </script>
 </body>
