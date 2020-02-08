@@ -26,12 +26,21 @@ var article = {
     },
 
 
+    // 保存文章编辑
+    save: function (fd) {
+        return $.ajax({
+            url: APILIST.article_edit,
+            type: 'post',
+            data: fd,
+            processData: false,  //不允许处理数据
+            contentType: false,  //不要设置请求头
+        })
+    },
+
+
+
     // 删除文章
     del: function (id) {
         return $.get(APILIST.article_del, { 'id': id })
     },
-    // // 编辑文章类别
-    // edit: function (id, name, slug) {
-    //     return $.post(APILIST.category_edit, { 'id': id, 'name': name, 'slug': slug })
-    // }
 }
