@@ -251,13 +251,18 @@
                     // 编辑成功  
                     // 隐藏模态框
                     alert(res.msg)
-                    $('#editModal').modal('hide');
+
                     // 重新获取数据
                     getAndShow();
                 } else {
                     alert(res.msg)
                 }
             })
+        })
+
+
+        $('#model_shutoff1').click(function () {
+            $('#editModal').modal('hide');
         })
     </script>
 </body>

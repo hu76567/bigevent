@@ -11,10 +11,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <link type="text/css" rel="stylesheet" href="js/jedate/css/jedate.css">
-    <script src="js/jquery-1.12.4.min.js"></script>
-    <script src="js/jedate/js/jedate.js"></script>
-    <script src="js/tinymce/js/tinymce/tinymce.min.js"></script>
-    <script src="js/tinymce/js/tinymce_setup.js"></script>
+
 </head>
 
 <body>
@@ -27,20 +24,20 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" value="文章标题文字">
+                        <input type="text" class="form-control" id="title" value="文章标题文字">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
+                        <img src="images/pic06.jpg" id="previewImg" class="article_cover">
                         <input type="file" id="exampleInputFile">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control">
+                        <select class="form-control" id="type">
                             <option>类别一</option>
                             <option>类别二</option>
                             <option>类别三</option>
@@ -80,17 +77,41 @@
     </div>
 
 
-
-
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/jedate/js/jedate.js"></script>
+    <script src="js/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="js/tinymce/js/tinymce_setup.js"></script>
+    <script src="./js/util/config.js"></script>
+    <script src="./js/util/article.js"></script>
     <script>
         // 编辑文章
         //获取从列表页传过来的id
         // 根据id 去取数据并显示在页面上
         // 保存编辑的内容
-        var str = window.location.search  //用来获取url中查询字符串的值
+        window.location.search  //用来获取url中查询字符串的值
+        var id = window.location.search.substr(4)   //截取字符串
         // console.log(id)
-        var id = str.substr(4)   //截取字符串
-        console.log(id)
+
+        // 调用接口去取信息
+        article.getById(id).then(function (res) {
+            // console.log(res.data.title)
+            if (res.code === 200) {
+                console.log(res)
+                // 显示当前文章内容
+                $('#title').val(res.data.title)
+                $('#previewImg').attr('src', res.data.cover)
+                $('#dateinput').val(res.data.date)
+
+                //  数据回来的时候，富文本编辑器可能没有准备好，需要设置个延迟
+                setTimeout(function () {
+                    tinymce.activeEditor.setContent(res.data.content)
+                }, 1000)
+
+                // 再给富文本编辑器设置内容
+            } else {
+                alert(res.msg)
+            }
+        })
     </script>
 </body>
 

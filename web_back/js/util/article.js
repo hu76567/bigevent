@@ -4,6 +4,16 @@ var article = {
     get: function (page, type, status) {
         return $.get(APILIST.article_get, { 'page': page, 'type': type, 'state': status })
     },
+
+    /**
+     *  根据文章id去获取
+     * @param {Number} id 
+     */
+    getById: function (id) {
+        return $.get(APILIST.article_get, { 'id': id })
+    },
+
+
     // 发布文章
     add: function (fd) {
         return $.ajax({
@@ -14,6 +24,8 @@ var article = {
             contentType: false,  //不要设置请求头
         })
     },
+
+
     // 删除文章
     del: function (id) {
         return $.get(APILIST.article_del, { 'id': id })
