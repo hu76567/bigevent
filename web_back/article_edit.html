@@ -38,11 +38,11 @@
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="type">
-                            <option>类别一</option>
+                            <!-- <option>类别一</option>
                             <option>类别二</option>
                             <option>类别三</option>
                             <option selected>类别四</option>
-                            <option>类别五</option>
+                            <option>类别五</option> -->
                         </select>
                     </div>
                 </div>
@@ -83,8 +83,28 @@
     <script src="js/tinymce/js/tinymce_setup.js"></script>
     <script src="./js/util/config.js"></script>
     <script src="./js/util/article.js"></script>
+    <script src="./js/util/category.js"></script>
+
+
+
+    <script src="./js/template-web.js"></script>
+
+    <!--定义模板 -->
+    <script id='cate' type="text/html">
+     {{each data item}}
+     <option value="{{item.id}}">{{item.name}}</option>
+     {{/each}}
+    </script>
+
+
     <script>
         // 编辑文章
+        // 1.先求类别
+        // 2.求详情
+
+
+
+
         //获取从列表页传过来的id
         // 根据id 去取数据并显示在页面上
         // 保存编辑的内容
@@ -92,26 +112,53 @@
         var id = window.location.search.substr(4)   //截取字符串
         // console.log(id)
 
+
+        // 封装一下
         // 调用接口去取信息
-        article.getById(id).then(function (res) {
-            // console.log(res.data.title)
-            if (res.code === 200) {
-                console.log(res)
-                // 显示当前文章内容
-                $('#title').val(res.data.title)
-                $('#previewImg').attr('src', res.data.cover)
-                $('#dateinput').val(res.data.date)
+        function getAndShow(id) {
+            article.getById(id).then(function (res) {
+                // console.log(res.data.title)
+                if (res.code === 200) {
+                    console.log(res)
+                    // 显示当前文章内容
+                    $('#title').val(res.data.title)
+                    $('#previewImg').attr('src', res.data.cover)
+                    $('#dateinput').val(res.data.date)
+                    $('#type').val(res.data.type)
 
-                //  数据回来的时候，富文本编辑器可能没有准备好，需要设置个延迟
-                setTimeout(function () {
-                    tinymce.activeEditor.setContent(res.data.content)
-                }, 1000)
+                    //  数据回来的时候，富文本编辑器可能没有准备好，需要设置个延迟
+                    setTimeout(function () {
+                        tinymce.activeEditor.setContent(res.data.content)
+                    }, 1000)
 
-                // 再给富文本编辑器设置内容
-            } else {
-                alert(res.msg)
-            }
-        })
+                    // 再给富文本编辑器设置内容
+                } else {
+                    alert(res.msg)
+                }
+            })
+        }
+
+
+
+
+
+        function getAndShowCategory() {
+            category.get().then(function (res) {
+                // console.log(res)
+                if (res.code == 200) {
+                    var htmlStr = template('cate', res);
+                    console.log(htmlStr)
+                    $('#type').html(htmlStr)
+                    getAndShow(id)
+                    // 让下拉框显示当前的类别
+                } else {
+                    alert(res.msg)
+                }
+            })
+        }
+
+
+        getAndShowCategory()
     </script>
 </body>
 
