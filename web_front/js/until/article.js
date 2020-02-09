@@ -1,7 +1,11 @@
-// 把与文章分类相关的操作写在这里
+// 把与文章内容相关的操作写在这里
 var article = {
     // 获取文章列表
-    get: function (page, type, status) {
-        return $.get(APILIST.article_get, { 'page': page, 'type': type, 'state': status })
-    }
+    // 获取焦点图
+    getFocus: function (page, type, status) {
+        return $.get(APILIST.article_get, { perpage: 5 })
+    },
+    getRank: function (type) {
+        return $.get(APILIST.rank, { 'type': type })
+    },
 }

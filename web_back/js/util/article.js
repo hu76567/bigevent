@@ -1,4 +1,4 @@
-// 把与文章分类相关的操作写在这里
+// 把与文章内容相关的操作写在这里
 var article = {
     // 获取文章列表
     get: function (page, type, status) {
