@@ -6,6 +6,9 @@ body{
     height:85px;
     margin:0 auto;
 }
+.cur{
+    background-color: #0075f3;
+}
 .logo{
     width:148px;
     height:61px;

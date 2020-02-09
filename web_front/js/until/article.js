@@ -5,7 +5,12 @@ var article = {
     getFocus: function (page, type, status) {
         return $.get(APILIST.article_get, { perpage: 5 })
     },
+    // 获取排行
     getRank: function (type) {
-        return $.get(APILIST.rank, { 'type': type })
+        return $.get(APILIST.article_rank, { 'type': type })
+    },
+    // 获取最新资讯
+    getLastest: function () {
+        return $.get(APILIST.article_last)
     },
 }

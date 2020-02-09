@@ -8,10 +8,8 @@
     <title>大事件-列表页</title>
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery.pagination.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="js/jquery.pagination.min.js"></script>
+
 </head>
 
 <body>
@@ -31,7 +29,7 @@
         <div class="menu">
             <div class="menu_collapse fl">
                 <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
-                <ul class="level_two">
+                <ul class="level_two" id="level_two_menu">
                     <li class="up"></li>
                     <li><a href="#">最 新</a></li>
                     <li><a href="#">科 技</a></li>
@@ -41,7 +39,7 @@
                     <li><a href="#">公 司</a></li>
                 </ul>
             </div>
-            <ul class="left_menu fl">
+            <ul class="left_menu fl" id='left_menu'>
                 <li><a href="#">最 新</a></li>
                 <li><a href="#">科 技</a></li>
                 <li><a href="#">股 市</a></li>
@@ -136,17 +134,17 @@
             </div>
 
             <div id="pagination" class="page"></div>
-            <script>
-                $(function() {
+            <!-- <script>
+                $(function () {
                     $("#pagination").pagination({
                         currentPage: 2,
-                        totalPage:8,
-                        callback: function(current) {
+                        totalPage: 8,
+                        callback: function (current) {
                             alert('ok!');
                         }
                     });
                 });
-            </script>
+            </script> -->
 
         </div>
         <div class="right_con setfl">
@@ -220,12 +218,59 @@
             <span>|</span>
             <a href="#">招聘人才</a>
             <span>|</span>
-            <a href="#">友情链接</a>		
+            <a href="#">友情链接</a>
         </div>
-        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司   All Rights Reserved</p>
-        <p>电话：0755-****888    粤ICP备*******8号</p>
+        <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
+        <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
 
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/until/config.js"></script>
+    <script src="./js/until/category.js"></script>
+    <script src="./js/until/article.js"></script>
+
+
+
+
+    <!-- 引入模板js -->
+    <script src="./js/template-web.js"></script>
+
+    <!-- 模板引擎  文章类别 -->
+    <script id="cate" type="text/html">
+        {{each data item}}
+
+        {{if item.id==curid }}
+        <li class="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
+        {{else}}
+        <li><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
+        {{/if}}
+
+        {{/each}}
+    </script>
+
+
+
+
+
+    <script>
+        // 获取从index.html 地址栏中的id 
+        var id = window.location.search.substr(4)
+        console.log(id)
+
+        // 获取类别显示
+        category.get().then(function (res) {
+            res.curid = id
+            console.log(res)
+
+            var htmlStr = template('cate', res)
+            // console.log(htmlStr)
+            // 将内容显示在页面上
+            $('#left_menu').html(htmlStr)
+            // 
+            $('#level_two_menu').append(htmlStr)
+        })
+    </script>
 </body>
 
 </html>
