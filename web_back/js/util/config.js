@@ -3,10 +3,10 @@
 
 
 // 所有接口的基地址
-var BASEURL = 'http://192.168.1.111:8000'
+const BASEURL = 'http://192.168.1.111:8000'
 
 // 用来保所有的接口信息
-var APILIST = {
+const APILIST = {
     // 登录
     user_login: BASEURL + '/admin/login',
     // 退出

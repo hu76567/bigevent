@@ -113,21 +113,22 @@
 
         // 发布文章
         // 收集用户信息    简单判断   调用接口   实现添加   根据反馈实现后续操作 
-        $('#btnAdd').click(function () {
+        $('#btnAdd').click(() => {
             //获取表单内容
-            var fd = new FormData(document.getElementById('myform'))
+            let fd = new FormData(document.getElementById('myform'))
             //手动补充一个状态参数state
             fd.append('state', '已发布')
             //获取富文本编辑器的内容
             fd.set('content', tinyMCE.activeEditor.getContent())
             // 发送请求
-            article.add(fd).then(function (res) {
+            article.add(fd).then(res => {
                 // console.log(res)
-                if (res.code === 201) {
+                let { code, msg } = res;
+                if (code === 201) {
                     alert('发布成功')
                     $('#inputEmail3').val('')
                 } else (
-                    alert(res.msg)
+                    alert(msg)
                 )
             })
 
@@ -135,21 +136,22 @@
 
 
         //获取文章类别并显示
-        category.get().then(function (res) {
+        category.get().then(res => {
             console.log(res)
-            if (res.code === 200) {
+            let { code, msg } = res;
+            if (code === 200) {
                 // 将获取的类别显示在页面上
-                var htmlStr = template('tmp', res)
+                let htmlStr = template('tmp', res)
                 $('#selCategory').html(htmlStr)
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
 
 
 
         // 封面图片预览
-        $('#cover').change(function () {
+        $('#cover').change(() => {
             // change事件监听src的变化
             // 获取当前图片的src
             // console.log(this.files[0])

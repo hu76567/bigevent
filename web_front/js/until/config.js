@@ -1,10 +1,10 @@
 // 配置文件
 
 // 所有接口的基地址
-var BASEURL = 'http://192.168.1.111:8000'
+const BASEURL = 'http://192.168.1.111:8000'
 
 // 用来保所有的接口信息
-var APILIST = {
+const APILIST = {
     // 获取类别
     category_get: BASEURL + '/category',
     // 获取文章
@@ -15,4 +15,6 @@ var APILIST = {
     article_last: BASEURL + '/lastest',
     // 获取文章详情
     article_detail: BASEURL + '/article',
+    // 评论
+    comment_add: BASEURL + '/post_comment',
 }

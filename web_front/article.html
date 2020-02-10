@@ -91,14 +91,14 @@
             <form action="" class="comment_form">
                 <div class="form_group">
                     <label>用户名：</label>
-                    <input type="text" placeholder="请输入用户名" class="comment_name">
+                    <input type="text" placeholder="请输入用户名" class="comment_name" id="comment_name">
                 </div>
                 <div class="form_group">
                     <label>评论内容：</label>
-                    <textarea placeholder="请发表您的评论" class="comment_input"></textarea>
+                    <textarea placeholder="请发表您的评论" class="comment_input" id="comment_content"></textarea>
                 </div>
                 <div class="form_group">
-                    <input type="submit" name="" value="评 论" class="comment_sub"></div>
+                    <input type="button" id="btn" name="" value="评 论" class="comment_sub"></div>
             </form>
 
             <div class="comment_count">
@@ -217,6 +217,7 @@
     <script src="./js/until/config.js"></script>
     <script src="./js/until/category.js"></script>
     <script src="./js/until/article.js"></script>
+    <script src="./js/until/comment.js"></script>
     <!-- 引入分页插件 -->
     <script src="./js/jquery.twbsPagination.js"></script>
 
@@ -231,7 +232,7 @@
         {{each data item}}
 
        {{if item.id==curid }}
-       <li class="cur" id="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
+       <li class="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
        {{else}}
        <li id="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
        {{/if}}
@@ -241,25 +242,10 @@
 
 
 
-    <!-- 模板引擎  热门排行 -->
-    <script id='remen' type="text/html">
-        {{each data item idx}}
-        {{if idx==0}}
-          <li><span class="first">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
-          {{else if idx==1}}
-          <li><span class="second">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
-          {{else if idx==2}}
-          <li><span class="third">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
-          {{else}}
-          <li><span>{{idx+1}}</span><a href="#">{{item.title}}</a></li>
-          {{/if}}
-        {{/each}}
-    </script>
-
     <script>
         // 获取文章类型
-        category.get().then(function (res) {
-            var htmlStr = template('cate', res)
+        category.get().then(res => {
+            let htmlStr = template('cate', res)
             // console.log(htmlStr)
             // 将内容显示在页面上
             $('#left_menu').html(htmlStr)
@@ -270,41 +256,73 @@
 
 
         // 热门排行
-        article.getRank().then(function (res) {
-            if (res.code === 200) {
-                var htmlStr = template('remen', res)
-                // console.log(htmlStr)
-                $('#content_paihang').html(htmlStr)
+        // var curid=
+        //  article.getRank(id).then(function (res) {
+        //     // console.log(res)
+        //     if (res.code === 200) {
+        //         var htmlStr = template('remen', res)
+        //         // console.log(htmlStr)
+        //         $('#content_paihang').html(htmlStr)
+        //     } else {
+        //         alert(res.msg)
+        //     }
+        // })
+
+
+        // 详情内容
+        let id = location.search.substr(4)
+        article.getDetail(id).then(res => {
+            // console.log(res)
+            let { code, msg, data } = res;
+            if (code === 200) {
+
+                $("#author").html(data.author)
+                $("#comment").html(data.comment)
+                $("#content").html(data.content)
+                $("#date").html(data.date)
+                $("#read").html(data.read)
+                $("#title").html(data.title)
+                $("#type_name").html(data.type_name)
+
+                if (t.prev) {
+                    $("#prev").attr('href', './article.html?id=' + data.prev.id)
+                    $("#prev").text(t.prev.title)
+                } else {
+                    $("#prev").text("none")
+                }
+
+                if (t.next) {
+                    $("#next").attr('href', './article.html?id=' + data.next.id)
+
+                } else {
+                    $("#next").text("none")
+                }
+
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
 
 
 
 
-        var id = location.search.substr(4)
-        article.getDetail(id).then(function (res) {
-            // console.log(res)
-            if (res.code === 200) {
-                var t = res.data
-                $("#author").html(t.author)
-                $("#comment").html(t.comment)
-                $("#content").html(t.content)
-                $("#date").html(t.date)
-                $("#read").html(t.read)
-                $("#title").html(t.title)
-                $("#type_name").html(t.type_name)
-
-
-                $("#prev").attr('href', './article.html?id=' + t.prev.id)
-                $("#prev").text(t.prev.title)
-
-                $("#next").attr('href', './article.html?id=' + t.next.id)
-                $("#next").text(t.next.title)
-            } else {
-                alert(res.msg)
+        // 评论 
+        $("#btn").click(res => {
+            let name = $('#comment_name').val().trim()
+            let content = $('#comment_content').val().trim()
+            if (name.length === 0 || content.length === 0) {
+                alert("不能为空")
+                return;
             }
+            comment.add(name, content, id).then(res => {
+                // console.log(res)
+                let { code } = res;
+                if (code === 200) {
+                    // 清空评论区
+                    $('#comment_name').val('')
+                    $('#comment_content').val()
+                }
+            })
         })
     </script>
 </body>

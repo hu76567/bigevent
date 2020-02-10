@@ -116,26 +116,30 @@
     <script src="./js/util/user.js"></script>
     <script>
         // 1.用户退出
-        $('#btnLogout').click(function () {
+        $('#btnLogout').click(() => {
             // alert(1)
             // 请求接口   目的是通知服务器要退出了
-            user.logOut().then(function (res) {
+            user.logOut().then(res => {
                 console.log(res)
-                if (res.code === 200) {
+                let { code, msg } = res;
+                if (code === 200) {
                     // alert('退出成功')
                     window.location.href = './login.html'
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         })
 
         // 2.获取管理员的信息并显示
-        user.getInfo().then(function (res) {
+        user.getInfo().then(res => {
             console.log(res)
-            if (res.code === 200) {
+            let { code, msg } = res;
+            if (code === 200) {
                 $('#userName').text(res.data.nickname);
                 $('.userImg').attr('src', res.data.user_pic)
+            } else {
+                alert(msg)
             }
         })
     </script>

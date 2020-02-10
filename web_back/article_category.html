@@ -153,10 +153,10 @@
     </script>
     <script>
         function getAndShow() {
-            category.get().then(function (res) {
+            category.get().then(res => {
                 // console.log(res)
                 // 数据渲染  用模板引擎
-                var htmlStr = template('tmp_cate', res)
+                let htmlStr = template('tmp_cate', res)
                 // console.log(htmlStr)
                 // 把HTML结构显示在界面上
                 $('#category_table').html(htmlStr)
@@ -170,15 +170,16 @@
         // 2.添加功能   弹出模态框
         //  点击添加按钮 获取用户信息   发请求，根据请求做后面动作
         $('#model_add').click(function () {
-            var name = $('#name').val().trim();
-            var slug = $('#slug').val().trim();
+            let name = $('#name').val().trim();
+            let slug = $('#slug').val().trim();
             if (name.length === 0 || slug.length === 0) {
                 alert('不能为空')
                 return
             }
-            category.add(name, slug).then(function (res) {
+            category.add(name, slug).then(res => {
                 // console.log(res)
-                if (res.code === 200) {
+                let { code, msg } = res
+                if (code === 200) {
                     // 添加成功  清空输入  隐藏模态框 获取新数据
                     $('#name').val('')
                     $('#slug').val('')
@@ -187,12 +188,12 @@
                     // 重新获取数据
                     getAndShow();
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
 
         })
-        $('#model_shutoff').click(function () {
+        $('#model_shutoff').click(() => {
             $('#addModal').modal('hide');
         })
 
@@ -201,13 +202,14 @@
         $('#category_table').on('click', '.del', function () {
             // alert(1)
             // 获取到自定义属性的id
-            var id = $(this).attr('data-id')
+            let id = $(this).attr('data-id')
             category.del(id).then(function (res) {
                 // console.log(res)
-                if (res.code === 200) {
+                let { code, msg } = res;
+                if (code === 200) {
                     getAndShow();
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         })
@@ -215,11 +217,12 @@
 
 
         // 4.编辑  事件委托 弹出模态框并显示当前要编辑的内容，修改后保存 再发请求做后续操作
-        $('#category_table').on('click', '.edit', function () {
+        $('#category_table').on('click', '.edit', () => {
             // 获取当前要编辑的内容
-            var id = $(this).attr('data-id')
-            var name = $(this).attr('data-name')
-            var slug = $(this).attr('data-slug')
+            console.log(this)
+            let id = $(this).attr('data-id')
+            let name = $(this).attr('data-name')
+            let slug = $(this).attr('data-slug')
 
             // 弹出模态框的时候设置模态框的内容
             // console.log(name)
@@ -232,11 +235,11 @@
         })
 
         // 点击按钮实现保存
-        $('#model_save').click(function () {
+        $('#model_save').click(() => {
             // 获取输入框内容
-            var id = $('#edit_id').val().trim();
-            var newname = $('#edit_name').val().trim();
-            var newslug = $('#edit_slug').val().trim();
+            let id = $('#edit_id').val().trim();
+            let newname = $('#edit_name').val().trim();
+            let newslug = $('#edit_slug').val().trim();
 
             if (newname.length === 0 || newslug.length === 0) {
                 alert('不能为空')
@@ -245,9 +248,10 @@
 
             // console.log(id，newname, newslug)
 
-            category.edit(id, newname, newslug).then(function (res) {
+            category.edit(id, newname, newslug).then(res => {
                 // console.log(res)
-                if (res.code === 200) {
+                let { code, msg } = res;
+                if (code === 200) {
                     // 编辑成功  
                     // 隐藏模态框
                     alert(res.msg)
@@ -255,13 +259,13 @@
                     // 重新获取数据
                     getAndShow();
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         })
 
 
-        $('#model_shutoff1').click(function () {
+        $('#model_shutoff1').click(() => {
             $('#editModal').modal('hide');
         })
     </script>

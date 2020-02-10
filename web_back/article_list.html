@@ -121,16 +121,16 @@
 
     <script>
 
-        var curPage = 1;    //全局变量，表示当前要查询第几页的数据
-        var curType = '';   //全局变量，表示当前要查询文章的类型编号
-        var curStatus = '';   //全局变量，表示当前要查询文章的状态
-        var curTotalPage;
+        let curPage = 1;    //全局变量，表示当前要查询第几页的数据
+        let curType = '';   //全局变量，表示当前要查询文章的类型编号
+        let curStatus = '';   //全局变量，表示当前要查询文章的状态
+        let curTotalPage;
 
         //  1 获取文章类别信息显示在下拉列表中
         //   调用接口获取数据
-        category.get().then(function (res) {
+        category.get().then(res => {
             // console.log(res)
-            var htmlstr = template('tmp_category', res)
+            let htmlstr = template('tmp_category', res)
             // console.log(htmlstr)
             $('#selCategory').html(htmlstr)
         })
@@ -138,11 +138,12 @@
 
         //  2获取文章列表，并显示在表格
         function getAndShow() {
-            article.get(curPage, curType, curStatus).then(function (res) {
+            article.get(curPage, curType, curStatus).then(res => {
                 // console.log(res)
-                if (res.code === 200) {
+                let { code, msg } = res;
+                if (code === 200) {
                     // 渲染表格
-                    var htmlStr = template('tmp_table', res)
+                    let htmlStr = template('tmp_table', res)
                     $('#tbody').html(htmlStr)
 
                     if (curTotalPage !== res.totalPage) {
@@ -169,7 +170,7 @@
                         }
                     });
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         }
@@ -179,7 +180,7 @@
 
 
         // 3.筛选  获取选择，带参数调用接口，获取数据
-        $('#btnSearch').click(function () {
+        $('#btnSearch').click(() => {
             //    把页码重置为第一页
             curPage = 1
             curType = $('#selCategory').val()
@@ -195,20 +196,20 @@
         // 删除功能 tbody加事件委托
         $('#tbody').on('click', '.del', function () {
             // alert(1)
-
             // 原则 让代码尽早结束
             if (!confirm('你确定要删除么')) {
                 return
             }
-            var id = $(this).attr('data-id')
+            let id = $(this).attr('data-id')
             // alert(id)
             article.del(id).then(function (res) {
-                if (res.code === 200) {
+                let { code, msg } = res;
+                if (code === 200) {
                     // 删除成功
                     // 重新获取
                     getAndShow();
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         })

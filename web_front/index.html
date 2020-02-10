@@ -291,9 +291,9 @@
 
     <script>
         // 获取文章类型
-        category.get().then(function (res) {
-            console.log(res)
-            var htmlStr = template('cate', res)
+        category.get().then(res => {
+            // console.log(res)
+            let htmlStr = template('cate', res)
             // console.log(htmlStr)
             // 将内容显示在页面上
             $('#left_menu').html(htmlStr)
@@ -304,43 +304,46 @@
 
 
         // 焦点图
-        article.getFocus().then(function (res) {
+        article.getFocus().then(res => {
             // console.log(res.data)
-            if (res.code === 200) {
+            let { code, msg } = res;
+            if (code === 200) {
                 var htmlStr = template('focus', res)
                 // console.log(htmlStr)
 
                 $("#focus_list").html(htmlStr)
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
 
 
 
         // 热门排行
-        article.getRank().then(function (res) {
+        article.getRank().then(res => {
             // console.log(res)
-            if (res.code === 200) {
+            let { code, msg } = res;
+            if (code === 200) {
                 var htmlStr = template('remen', res)
                 // console.log(htmlStr)
                 $('#content_list').html(htmlStr)
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
 
 
 
         // 最新资讯
-        article.getLastest().then(function (res) {
-            console.log(res)
-            if (res.code === 200) {
+        article.getLastest().then(res => {
+            // console.log(res)
+            let { code, msg } = res;
+            if (code === 200) {
                 var htmlStr = template('tempNews', res)
-                console.log(htmlStr)
+                // console.log(htmlStr)
                 $("#new_list").html(htmlStr)
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
     </script>

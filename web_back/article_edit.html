@@ -109,31 +109,32 @@
         // 根据id 去取数据并显示在页面上
         // 保存编辑的内容
         window.location.search  //用来获取url中查询字符串的值
-        var id = window.location.search.substr(4)   //截取字符串
+        let id = window.location.search.substr(4)   //截取字符串
         // console.log(id)
 
 
         // 封装一下
         // 调用接口去取信息
         function getAndShow(id) {
-            article.getById(id).then(function (res) {
+            article.getById(id).then(res => {
                 // console.log(res.data.title)
-                if (res.code === 200) {
+                let { code, msg, data } = res;
+                if (code === 200) {
                     console.log(res)
                     // 显示当前文章内容
-                    $('#title').val(res.data.title)
-                    $('#previewImg').attr('src', res.data.cover)
-                    $('#dateinput').val(res.data.date)
-                    $('#type').val(res.data.type)
+                    $('#title').val(data.title)
+                    $('#previewImg').attr('src', data.cover)
+                    $('#dateinput').val(data.date)
+                    $('#type').val(data.type)
 
                     //  数据回来的时候，富文本编辑器可能没有准备好，需要设置个延迟
-                    setTimeout(function () {
+                    setTimeout(() => {
                         tinymce.activeEditor.setContent(res.data.content)
                     }, 1000)
 
                     // 再给富文本编辑器设置内容
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             })
         }
@@ -142,10 +143,10 @@
 
 
         function getAndShowCategory() {
-            category.get().then(function (res) {
+            category.get().then(res => {
                 // console.log(res)
                 if (res.code == 200) {
-                    var htmlStr = template('cate', res);
+                    let htmlStr = template('cate', res);
                     // console.log(htmlStr)
                     $('#type').html(htmlStr)
                     getAndShow(id)
@@ -165,10 +166,10 @@
         // 给保存按钮添加点击事件 收集数据 调用接口
 
 
-        $('#save').click(function () {
+        $('#save').click(() => {
             // alert(1)
             // 收集数据
-            var fd = new FormData(document.getElementById('form'))
+            let fd = new FormData(document.getElementById('form'))
             // 要获取formdata中的数据,要注意把name属性设置成与接口中的参数一一对应
 
             // 追加id属性
@@ -176,7 +177,7 @@
             fd.set('content', tinymce.activeEditor.getContent())
 
 
-            article.save(fd).then(function () {
+            article.save(fd).then(() => {
                 if (res.code === 200) {
                     alert("修改成功")
                 } else {

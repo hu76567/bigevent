@@ -284,15 +284,15 @@
 
     <script>
         // 获取从index.html 地址栏中的id 
-        var id = window.location.search.substr(4)
+        let id = window.location.search.substr(4)
         // console.log(id)
 
         // 获取类别显示
-        category.get().then(function (res) {
+        category.get().then(res => {
             res.curid = id
             // console.log(res)
 
-            var htmlStr = template('cate', res)
+            let htmlStr = template('cate', res)
             // console.log(htmlStr)
             // 将内容显示在页面上
             $('#left_menu').html(htmlStr)
@@ -300,7 +300,7 @@
             $('#level_two_menu').html(htmlStr)
 
             // res.data  查询数组 找到与当前相同id的
-            res.data.forEach(function (item) {
+            res.data.forEach(item => {
                 if (item.id == id) {
                     $('#list_name').html(item.name)
                 }
@@ -311,13 +311,14 @@
 
 
         // 显示当前类别文章
-        var curPage = 1;   //当前要取回第几页的文章
+        let curPage = 1;   //当前要取回第几页的文章
         getAndShow();
         function getAndShow() {
-            article.getList(id, curPage).then(function (res) {
+            article.getList(id, curPage).then(res => {
                 // console.log(res)
-                if (res.code === 200) {
-                    var htmlStr = template('tempNews', res)
+                let { code, msg } = res;
+                if (code === 200) {
+                    let htmlStr = template('tempNews', res)
                     // console.log(htmlStr)
                     $('#content_list').html(htmlStr)
 
@@ -339,7 +340,7 @@
                         }
                     });
                 } else {
-                    alert(res.msg)
+                    alert(msg)
                 }
             });
         }
@@ -348,14 +349,15 @@
 
 
         // 热门排行
-        article.getRank(id).then(function (res) {
+        article.getRank(id).then(res => {
             // console.log(res)
-            if (res.code === 200) {
+            let { code, msg } = res;
+            if (code === 200) {
                 var htmlStr = template('remen', res)
                 // console.log(htmlStr)
                 $('#content_paihang').html(htmlStr)
             } else {
-                alert(res.msg)
+                alert(msg)
             }
         })
 
