@@ -32,6 +32,8 @@ var article = {
     getList: function (type, page) {
         return $.get(APILIST.article_get, { "type": type, "page": page })
     },
-
-
+    //  获取详情
+    getDetail: function (id) {
+        return $.get(APILIST.article_detail, { 'id': id })
+    },
 }

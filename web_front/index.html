@@ -292,7 +292,7 @@
     <script>
         // 获取文章类型
         category.get().then(function (res) {
-            // console.log(res)
+            console.log(res)
             var htmlStr = template('cate', res)
             // console.log(htmlStr)
             // 将内容显示在页面上
@@ -334,7 +334,7 @@
 
         // 最新资讯
         article.getLastest().then(function (res) {
-            // console.log(res)
+            console.log(res)
             if (res.code === 200) {
                 var htmlStr = template('tempNews', res)
                 console.log(htmlStr)

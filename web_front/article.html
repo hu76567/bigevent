@@ -13,7 +13,7 @@
 
 <body>
     <div class="header">
-        <a href="#" class="logo fl"><img src="images/logo.png" alt="logo"></a>
+        <a href="./index.html" class="logo fl"><img src="images/logo.png" alt="logo"></a>
         <div class="search_form fl">
             <input type="text" class="search_txt" placeholder="黑洞照片">
             <button class="search_btn"><i class="fa fa-search"></i></button>
@@ -28,7 +28,7 @@
         <div class="menu">
             <div class="menu_collapse fl">
                 <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
-                <ul class="level_two">
+                <ul class="level_two" id="left_menu">
                     <li class="up"></li>
                     <li><a href="#">最 新</a></li>
                     <li><a href="#">科 技</a></li>
@@ -38,7 +38,7 @@
                     <li><a href="#">公 司</a></li>
                 </ul>
             </div>
-            <ul class="left_menu fl">
+            <ul class="left_menu fl" id="level_two_menu">
                 <li><a href="#">最 新</a></li>
                 <li><a href="#">科 技</a></li>
                 <li><a href="#">股 市</a></li>
@@ -58,10 +58,18 @@
             <div class="breadcrumb">
                 当前位置： <a href="#">首页</a> &gt; <a href="#">科技</a> &gt; 文章详情
             </div>
-            <h3 class="article_title">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
-            <div class="article_info">杰克 发布于 2019-05-08 07:08:46&nbsp;&nbsp;&nbsp;分类: 奇趣事&nbsp;&nbsp;&nbsp;阅读:
-                (98)&nbsp;&nbsp;&nbsp;评论: (0)</div>
-            <div class="article_con">
+            <h3 class="article_title" id="title">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
+            <div class="article_info">
+                <span id="author"></span>
+                发布于
+                <span id="date"></span>&nbsp;&nbsp;&nbsp;
+                分类:
+                <span id="type_name"></span>&nbsp;&nbsp;&nbsp;
+                阅读:
+                (<span id="read"></span>)&nbsp;&nbsp;&nbsp;
+                评论:
+                (<span id="comment"></span>)</div>
+            <div class="article_con" id="content">
 
                 <p>“上天入地”还不够？硅谷“钢铁侠”马斯克名下一家低调的公司最近又融了一大笔钱。</p>
 
@@ -76,8 +84,8 @@
 
             </div>
             <div class="article_links">
-                上一篇： <a href="#">世界第一台可以玩游戏的冰箱</a><br>
-                下一篇： <a href="#">世界第一个可以玩游戏的马桶、世界上第一个可以玩游戏的茶杯</a>
+                上一篇： <a href="#" id="prev">世界第一台可以玩游戏的冰箱</a><br>
+                下一篇： <a href="#" id="next">世界第一个可以玩游戏的马桶、世界上第一个可以玩游戏的茶杯</a>
             </div>
 
             <form action="" class="comment_form">
@@ -131,7 +139,7 @@
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list" content_paihang>
+                <ul class="content_list" id="content_paihang">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -217,6 +225,22 @@
     <!-- 引入模板js -->
     <script src="./js/template-web.js"></script>
 
+
+    <!-- 模板引擎  文章类别 -->
+    <script id="cate" type="text/html">
+        {{each data item}}
+
+       {{if item.id==curid }}
+       <li class="cur" id="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
+       {{else}}
+       <li id="cur"><a href="./list.html?id={{item.id}}">{{item.name}}</a></li>
+       {{/if}}
+
+       {{/each}}
+    </script>
+
+
+
     <!-- 模板引擎  热门排行 -->
     <script id='remen' type="text/html">
         {{each data item idx}}
@@ -233,14 +257,51 @@
     </script>
 
     <script>
-        var id = window.location.search.substr(4)
+        // 获取文章类型
+        category.get().then(function (res) {
+            var htmlStr = template('cate', res)
+            // console.log(htmlStr)
+            // 将内容显示在页面上
+            $('#left_menu').html(htmlStr)
+            // 
+            $('#level_two_menu').html(htmlStr)
+        })
+
+
+
         // 热门排行
-        article.getRank(id).then(function (res) {
-            // console.log(res)
+        article.getRank().then(function (res) {
             if (res.code === 200) {
                 var htmlStr = template('remen', res)
                 // console.log(htmlStr)
                 $('#content_paihang').html(htmlStr)
+            } else {
+                alert(res.msg)
+            }
+        })
+
+
+
+
+        var id = location.search.substr(4)
+        article.getDetail(id).then(function (res) {
+            // console.log(res)
+            if (res.code === 200) {
+                var t = res.data
+                $("#author").html(t.author)
+                $("#comment").html(t.comment)
+                $("#content").html(t.content)
+                $("#date").html(t.date)
+                $("#read").html(t.read)
+                $("#title").html(t.title)
+                $("#type_name").html(t.type_name)
+
+
+                $("#prev").attr('href', './article.html?id=' + t.prev.id)
+                $("#prev").text(t.prev.title)
+
+                $("#next").attr('href', './article.html?id=' + t.next.id)
+                $("#next").text(t.next.title)
             } else {
                 alert(res.msg)
             }
