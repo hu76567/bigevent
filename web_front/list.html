@@ -59,7 +59,7 @@
         <div class="left_con setfr">
 
             <div class="list_title">
-                <h3>科 技</h3>
+                <h3 id="list_name">科 技</h3>
             </div>
 
 
@@ -148,7 +148,7 @@
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
+                <ul class="content_list" id="content_paihang">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -267,7 +267,20 @@
         </script>
 
 
-
+    <!-- 模板引擎  热门排行 -->
+    <script id='remen' type="text/html">
+        {{each data item idx}}
+        {{if idx==0}}
+          <li><span class="first">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
+          {{else if idx==1}}
+          <li><span class="second">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
+          {{else if idx==2}}
+          <li><span class="third">{{idx+1}}</span><a href="#">{{item.title}}</a></li>
+          {{else}}
+          <li><span>{{idx+1}}</span><a href="#">{{item.title}}</a></li>
+          {{/if}}
+        {{/each}}
+  </script>
 
     <script>
         // 获取从index.html 地址栏中的id 
@@ -284,7 +297,14 @@
             // 将内容显示在页面上
             $('#left_menu').html(htmlStr)
             // 
-            $('#level_two_menu').append(htmlStr)
+            $('#level_two_menu').html(htmlStr)
+
+            // res.data  查询数组 找到与当前相同id的
+            res.data.forEach(function (item) {
+                if (item.id == id) {
+                    $('#list_name').html(item.name)
+                }
+            })
         })
 
 
@@ -323,6 +343,21 @@
                 }
             });
         }
+
+
+
+
+        // 热门排行
+        article.getRank(id).then(function (res) {
+            // console.log(res)
+            if (res.code === 200) {
+                var htmlStr = template('remen', res)
+                // console.log(htmlStr)
+                $('#content_paihang').html(htmlStr)
+            } else {
+                alert(res.msg)
+            }
+        })
 
     </script>
 </body>
