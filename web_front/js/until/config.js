@@ -17,4 +17,6 @@ const APILIST = {
     article_detail: BASEURL + '/article',
     // 评论
     comment_add: BASEURL + '/post_comment',
+    // 获取评论
+    comment_get: BASEURL + '/get_comments',
 }

@@ -58,7 +58,7 @@
             <div class="breadcrumb">
                 当前位置： <a href="#">首页</a> &gt; <a href="#">科技</a> &gt; 文章详情
             </div>
-            <h3 class="article_title" id="title">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
+            <h3 class="article_title" id="title" data-id="">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
             <div class="article_info">
                 <span id="author"></span>
                 发布于
@@ -105,8 +105,8 @@
                 4条评论
             </div>
 
-            <div class="comment_list_con">
-                <div class="comment_detail_list">
+            <div class="comment_list_con" id="comment_list">
+                <!-- <div class="comment_detail_list">
                     <div class="person_pic fl">乔</div>
                     <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
                     <div class="comment_text fl">
@@ -133,7 +133,7 @@
                     <div class="comment_text fl">
                         遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="right_con setfl">
@@ -214,10 +214,26 @@
     </div>
 
     <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/until/comment.js"></script>
     <script src="./js/until/config.js"></script>
     <script src="./js/until/category.js"></script>
     <script src="./js/until/article.js"></script>
-    <script src="./js/until/comment.js"></script>
+
+
+
+    <!-- 使用day.js -->
+    <script src="./js/dayjs/dayjs.min.js"></script>
+    <!-- 引入中文语言包 -->
+    <script src="./js/dayjs/zh_cn.js"></script>
+    <!-- day.js 插件 -->
+    <script src="./js/dayjs/relative.min.js"></script>
+
+
+
+
+
+
+
     <!-- 引入分页插件 -->
     <script src="./js/jquery.twbsPagination.js"></script>
 
@@ -242,7 +258,24 @@
 
 
 
+    <script id="cate_com" type="text/html">
+        {{each data item}}
+        <div class="comment_detail_list">
+            <div class="person_pic fl">{{item.name.substr(0,1)}}</div>
+            <div class="name_time fl"><b>{{item.name}}</b><span>{{item.relativeTime}}</span></div>
+            <div class="comment_text fl">
+                {{item.content}}
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+
     <script>
+
+        dayjs.locale('zh-cn');
+        dayjs.extend(dayjs_plugin_relativeTime)
+
         // 获取文章类型
         category.get().then(res => {
             let htmlStr = template('cate', res)
@@ -255,18 +288,6 @@
 
 
 
-        // 热门排行
-        // var curid=
-        //  article.getRank(id).then(function (res) {
-        //     // console.log(res)
-        //     if (res.code === 200) {
-        //         var htmlStr = template('remen', res)
-        //         // console.log(htmlStr)
-        //         $('#content_paihang').html(htmlStr)
-        //     } else {
-        //         alert(res.msg)
-        //     }
-        // })
 
 
         // 详情内容
@@ -275,7 +296,7 @@
             // console.log(res)
             let { code, msg, data } = res;
             if (code === 200) {
-
+                $("#title").attr('data-id', data.type_id)
                 $("#author").html(data.author)
                 $("#comment").html(data.comment)
                 $("#content").html(data.content)
@@ -284,14 +305,14 @@
                 $("#title").html(data.title)
                 $("#type_name").html(data.type_name)
 
-                if (t.prev) {
+                if (data.prev) {
                     $("#prev").attr('href', './article.html?id=' + data.prev.id)
-                    $("#prev").text(t.prev.title)
+                    $("#prev").text(data.prev.title)
                 } else {
                     $("#prev").text("none")
                 }
 
-                if (t.next) {
+                if (data.next) {
                     $("#next").attr('href', './article.html?id=' + data.next.id)
 
                 } else {
@@ -304,9 +325,25 @@
         })
 
 
+        getComment();
 
 
-        // 评论 
+        // // 热门排行
+        // var curid = $('#title').attr('data-id')
+        // console.log($('#title').attr('data-id'))
+        // article.getRank(id).then(function (res) {
+        //     // console.log(res)
+        //     if (res.code === 200) {
+        //         var htmlStr = template('remen', res)
+        //         // console.log(htmlStr)
+        //         $('#content_paihang').html(htmlStr)
+        //     } else {
+        //         alert(res.msg)
+        //     }
+        // })
+
+
+        //  发布评论 
         $("#btn").click(res => {
             let name = $('#comment_name').val().trim()
             let content = $('#comment_content').val().trim()
@@ -321,9 +358,37 @@
                     // 清空评论区
                     $('#comment_name').val('')
                     $('#comment_content').val()
+                    // 获取评论并显示
+                    getComment();
                 }
             })
         })
+
+
+        function getComment() {
+            comment.get(id).then(function (res) {
+                // console.log(res)
+                let { code, msg } = res;
+                if (code = 200) {
+
+                    res.data.forEach(function (item) {
+                        item.relativeTime = getRelativeTime(item.dt)
+                    })
+
+                    var htmlStr = template('cate_com', res)
+                    // console.log(htmlStr)
+
+                    $('#comment_list').html(htmlStr)
+                } else {
+                    alert(msg)
+                }
+            })
+        }
+
+        //    把时间戳转成相对时间
+        function getRelativeTime(dt) {
+            return dayjs(dt).fromNow()
+        }
     </script>
 </body>
 
