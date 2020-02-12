@@ -229,6 +229,7 @@
     <script src="./js/until/article.js"></script>
     <!-- 引入分页插件 -->
     <script src="./js/jquery.twbsPagination.js"></script>
+    <script src="./js/lazyload.js"></script>
 
 
 
@@ -255,7 +256,8 @@
     <script id="tempNews" type="text/html">
         {{each data item}}
         <div class="common_news_list">
-            <a href="article.html?id={{item.id}}" class="list_pic"><img src="{{item.cover}}" alt=""></a>
+            <a href="article.html?id={{item.id}}" class="list_pic">
+                <img class="img" data-src="{{item.cover}}" src="./images/op.png" alt=""></a>
             <h4><a href="article.html?id={{item.id}}">{{item.title}}</a></h4>
             <p>{{item.content}}</p>
             <div class="new_info">
@@ -321,7 +323,7 @@
                     let htmlStr = template('tempNews', res)
                     // console.log(htmlStr)
                     $('#content_list').html(htmlStr)
-
+                    $('.img').lazyload()
                     // 实现分页
                     $('#pagination').twbsPagination({
                         totalPages: res.pages,
