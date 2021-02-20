@@ -217,7 +217,7 @@
 
 
         // 4.编辑  事件委托 弹出模态框并显示当前要编辑的内容，修改后保存 再发请求做后续操作
-        $('#category_table').on('click', '.edit', () => {
+        $('#category_table').on('click', '.edit', function () {
             // 获取当前要编辑的内容
             console.log(this)
             let id = $(this).attr('data-id')
